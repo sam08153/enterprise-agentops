@@ -15,3 +15,20 @@ class AnalyzeRequest(BaseModel):
 class AnalyzeResponse(BaseModel):
     status: str
     message: str
+
+
+class RagSearchRequest(BaseModel):
+    query: str
+    tenant_id: str = "demo"
+
+
+class RagSearchResult(BaseModel):
+    source: str
+    score: float
+    content: str
+
+
+class RagSearchResponse(BaseModel):
+    query: str
+    tenant_id: str
+    results: list[RagSearchResult]

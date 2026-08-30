@@ -11,6 +11,7 @@ READ_ONLY_TOOLS: set[str] = {
     "get_logs",
     "get_metrics",
     "get_recent_deployment",
+    "search_knowledge",
 }
 
 

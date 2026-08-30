@@ -19,7 +19,8 @@ class Settings(BaseSettings):
     groq_api_key: str = ""
     mock_mode: bool = False
 
+    database_url: str = "postgresql://agentops:agentops@localhost:5432/agentops"
+
 
 
 settings = Settings()
-

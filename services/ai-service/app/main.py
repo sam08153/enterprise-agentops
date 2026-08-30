@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from app.config import settings
-from app.routers import health, analyze, investigate
+from app.routers import health, analyze, investigate, rag
 
 
 @asynccontextmanager
@@ -22,3 +22,4 @@ app = FastAPI(
 app.include_router(health.router)
 app.include_router(analyze.router)
 app.include_router(investigate.router)
+app.include_router(rag.router)
