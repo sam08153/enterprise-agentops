@@ -10,6 +10,7 @@ class AgentState(TypedDict, total=False):
     logs: List[str]
     metrics: Dict[str, Any]
     deployment: Dict[str, Any]
+    incident_history: List[Dict[str, Any]]
     knowledge_results: List[Dict[str, Any]]
 
     findings: List[str]

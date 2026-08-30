@@ -36,9 +36,13 @@ IMPORTANT:
 - Do not invent facts.
 - If evidence is insufficient, say so.
 - When using knowledge results, cite the source in the evidence.
+- Pay special attention to recurring patterns in incident_history.
 
 Incident:
 {incident}
+
+Incident History (past incidents for this service — look for recurring patterns):
+{incident_history}
 
 Logs:
 {logs}
@@ -49,7 +53,7 @@ Metrics:
 Deployment:
 {deployment}
 
-Knowledge:
+Knowledge (runbooks, architecture docs, postmortems, similar incidents):
 {knowledge_results}
 
 Return ONLY valid JSON with:

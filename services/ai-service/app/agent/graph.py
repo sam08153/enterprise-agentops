@@ -74,6 +74,7 @@ def run_investigation_graph(
         "thread_id": thread_id,
         "iteration": 0,
         "max_iterations": max_iterations,
+        "incident_history": [],
         "knowledge_results": [],
         "findings": [],
         "confidence": 0.0,

@@ -8,10 +8,10 @@ from typing import Any, Dict, Tuple
 from app.config import settings
 from app.models.incident import ToolExecutionRecord
 from app.tools.deployment import get_recent_deployment
-from app.tools.incident import get_incident
+from app.tools.incident import get_incident, search_incidents, get_incident_history
 from app.tools.logs import get_logs
 from app.tools.metrics import get_metrics
-from app.tools.rag import search_knowledge
+from app.tools.rag import search_knowledge, get_document
 
 logger = logging.getLogger(__name__)
 
@@ -145,6 +145,9 @@ def _mock_rca_response(prompt: str) -> dict:
 
 __all__ = [
     "get_incident",
+    "search_incidents",
+    "get_incident_history",
+    "get_document",
     "get_logs",
     "get_metrics",
     "get_recent_deployment",
