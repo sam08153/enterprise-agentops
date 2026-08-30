@@ -71,3 +71,27 @@ graph TD
 ## 6. Agent Routing & Tool Dispatching
 - **Intelligent Dispatch**: Dynamically routes task executions to the `FastAPI AI Service` or background `Temporal` workflows.
 - **Model Context Protocol (MCP)**: Acts as the client orchestrating external tool invocation safely.
+
+---
+
+## AI Service / Agent Invocation Flow
+
+This diagram illustrates the step-by-step tool selection and reasoning execution path inside the Python AI Service to produce the final Root-Cause Analysis (RCA).
+
+```mermaid
+graph TD
+    User["User"] --> API["FastAPI API"]
+    API --> Agent["Agent"]
+    Agent --> ToolSel["Tool Selection"]
+    
+    ToolSel --> IncidentTool["Incident Tool"]
+    ToolSel --> LogsTool["Logs Tool"]
+    ToolSel --> DeployTool["Deployment Tool"]
+    
+    IncidentTool --> LLM["LLM (Reasoning & Synthesis)"]
+    LogsTool --> LLM
+    DeployTool --> LLM
+    
+    LLM --> RCA["Final RCA (Root-Cause Analysis)"]
+```
+
