@@ -1,57 +1,51 @@
 # Enterprise AgentOps Platform Architecture
 
-This document describes the high-level architecture of the Enterprise AgentOps Platform, focusing on the flow from the user interface down to agent execution and orchestration.
+This document describes the high-level architecture of the Enterprise AgentOps Platform, focusing on the flow from the client through the Java API Gateway to the backend storage and the Python AI services.
 
 ## Architecture Topology
 
 ```mermaid
 graph TD
     %% Clients
-    ReactApp["React Frontend (UI)"]
+    Client["Client"]
 
     %% Gateway Layer
-    subgraph Gateway ["Java Agent Gateway (Spring Boot)"]
-        AuthFilter["1. Authentication (JWT/API Key)"]
-        AuthzInterceptor["2. Authorization (RBAC)"]
-        TenantResolver["3. Tenant Management (Context Resolver)"]
-        RateLimiter["4. Rate Limiting (Redis Token Bucket)"]
-        A2AEngine["5. A2A (Agent-to-Agent Communication)"]
-        AgentRouter["6. Agent Routing / Dispatcher"]
+    subgraph Gateway ["Java Gateway"]
+        Auth["Auth"]
+        API["API"]
+        Business["Business"]
     end
 
-    %% Execution Layer
-    subgraph Execution ["Agent & AI Service Layer"]
-        FastAPIService["AI Service (Python/FastAPI)"]
-        TemporalWorker["Durable Workflows (Temporal)"]
-        MCPServer["MCP Tool Integrations"]
-    end
-
-    %% Storage Layer
-    subgraph Storage ["Infrastructure & Storage"]
-        PostgresDB["PostgreSQL (vector)"]
-        RedisCache["Redis (Cache/Rate Limits)"]
-    end
-
-    %% Client connection
-    ReactApp -->|HTTP/WebSockets| AuthFilter
+    %% Storage & Service Split
+    PostgreSQL["PostgreSQL"]
+    Redis["Redis"]
     
-    %% Gateway Filters pipeline
-    AuthFilter --> AuthzInterceptor
-    AuthzInterceptor --> TenantResolver
-    TenantResolver --> RateLimiter
-    RateLimiter --> A2AEngine
-    A2AEngine --> AgentRouter
+    subgraph AIService ["AI Service"]
+        RAG["RAG"]
+        Retrieval["Retrieval"]
+        LLM["LLM"]
+        Tools["Tools"]
+        Agents["Agents"]
+    end
 
-    %% Routing to execution services
-    AgentRouter -->|HTTP/REST| FastAPIService
-    AgentRouter -->|gRPC/SDK| TemporalWorker
-    AgentRouter -->|MCP Protocol| MCPServer
+    %% Database details
+    pgvector["pgvector"]
 
-    %% Database & Cache access
-    Gateway -->|JPA| PostgresDB
-    Gateway -->|Jedis/Lettuce| RedisCache
-    FastAPIService -->|pgvector| PostgresDB
-```
+    %% Flow Relations
+    Client --> Gateway
+    Gateway --> PostgreSQL
+    Gateway --> Redis
+    Gateway --> AIService
+
+    PostgreSQL --> pgvector
+
+    %% AI Service internal hierarchy
+    AIService --> RAG
+    RAG --> Retrieval
+    RAG --> LLM
+    Retrieval --> Tools
+    Tools --> Agents
+``````
 
 ---
 
