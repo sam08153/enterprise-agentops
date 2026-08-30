@@ -104,7 +104,7 @@ sequenceDiagram
     participant JavaGateway as Java Gateway (Port 8080)
     participant AIService as FastAPI AI Service (Port 8081)
     participant Groq as Groq (Qwen 3.8 27B)
-    database PostgreSQL
+    participant PostgreSQL as PostgreSQL DB
 
     Client->>JavaGateway: POST /api/v1/agent/investigate (incidentId)
     JavaGateway->>PostgreSQL: Create AgentExecution (Status: RUNNING)
