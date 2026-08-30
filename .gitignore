@@ -1,0 +1,70 @@
+# ==========================================
+# Java / Maven Ignore rules
+# ==========================================
+**/target/
+**/pom.xml.tag
+**/pom.xml.releaseBackup
+**/pom.xml.next
+**/pom.xml.backup
+**/pom.xml.branch
+**/release.properties
+**/dependency-reduced-pom.xml
+**/buildNumber.properties
+**/.mvn/timing.properties
+**/.mvn/wrapper/maven-wrapper.jar
+**/.flattened-pom.xml
+
+# ==========================================
+# Python Ignore rules
+# ==========================================
+**/__pycache__/
+**/*.py[cod]
+**/*$py.class
+**/.venv/
+**/venv/
+**/ENV/
+**/env/
+**/.env
+**/.pytest_cache/
+**/.coverage
+**/htmlcov/
+**/.mypy_cache/
+**/.ruff_cache/
+
+# ==========================================
+# Node / Frontend Ignore rules
+# ==========================================
+**/node_modules/
+**/dist/
+**/build/
+**/.next/
+**/.nuxt/
+**/.svelte-kit/
+**/*.local
+
+# ==========================================
+# IDE & System Ignore rules
+# ==========================================
+**/.idea/
+**/*.iml
+**/.vscode/
+**/*.code-workspace
+**/.history/
+**/*.suo
+**/*.ntvs*
+**/*.njsproj
+**/*.sln
+**/*.swp
+**/*.swo
+**/*.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==========================================
+# Temporary / Test Data Ignore rules
+# ==========================================
+**/body.json
+**/incident.json
+**/*.log
+**/postgres_data/
+**/redis_data/
