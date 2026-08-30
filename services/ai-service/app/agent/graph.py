@@ -59,11 +59,15 @@ def _compile_with_checkpointer(graph):
     return graph.compile(checkpointer=checkpointer)
 
 
+MAX_TOOL_CALLS_DEFAULT = 20
+
+
 def run_investigation_graph(
     incident_id: str,
     tenant_id: str = "demo",
     thread_id: str | None = None,
     max_iterations: int = 5,
+    max_tool_calls: int = MAX_TOOL_CALLS_DEFAULT,
 ) -> RCAResponse:
     graph = build_graph()
 
@@ -74,8 +78,15 @@ def run_investigation_graph(
         "thread_id": thread_id,
         "iteration": 0,
         "max_iterations": max_iterations,
+        "max_tool_calls": max_tool_calls,
         "incident_history": [],
         "knowledge_results": [],
+        "commits": [],
+        "code_search": [],
+        "code_files": [],
+        "evidence": [],
+        "tool_failures": {},
+        "open_circuits": [],
         "findings": [],
         "confidence": 0.0,
         "final_report": {},
@@ -95,18 +106,25 @@ def run_investigation_graph(
     incident = final_state.get("incident", {}) or {}
     service = str(incident.get("service", "unknown") or "unknown")
 
+    evidence = list(report.get("evidence", []) or [])
+    if not evidence and final_state.get("evidence"):
+        evidence = [
+            f"[{e.get('source_type','?')}/{e.get('source','?')} ref={e.get('reference','?')}] {e.get('claim','')}"
+            for e in (final_state.get("evidence") or [])
+            if isinstance(e, dict)
+        ]
+
     return RCAResponse(
         incident_id=incident_id,
         service=service,
         summary=str(report.get("summary", "") or ""),
         root_cause=str(report.get("root_cause", "") or ""),
         confidence=confidence,
-        evidence=list(report.get("evidence", []) or []),
+        evidence=evidence,
         recommended_actions=list(report.get("recommended_actions", []) or []),
-        actions_executed=[],
+        actions_executed=list(report.get("actions_executed", []) or []),
         input_tokens=int(final_state.get("input_tokens", 0) or 0),
         output_tokens=int(final_state.get("output_tokens", 0) or 0),
         tool_calls=int(final_state.get("tool_calls", 0) or 0),
         tool_executions=list(final_state.get("tool_executions", []) or []),
     )
-

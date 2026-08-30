@@ -1,28 +1,26 @@
-def get_metrics(service: str) -> dict:
-    """Retrieve current and baseline performance metrics for a service."""
-    return {
-        "service": service,
-        "error_rate_before": "1.2%",
-        "error_rate_current": "18%",
-        "latency_p99_before": "180ms",
-        "latency_p99_current": "920ms",
-        "cpu_utilization": "54%",
-        "memory_utilization": "61%",
-        "throughput_before": "1200 rps",
-        "throughput_current": "980 rps",
-    }
+from __future__ import annotations
+
+from app.aws_mcp_client import aws_mcp_client
+
+
+def get_metrics(service: str, window_minutes: int = 30, tenant_id: str = "demo") -> dict:
+    result = aws_mcp_client().call_tool(
+        "get_service_metrics",
+        {"service": service, "window_minutes": window_minutes},
+        tenant_id=tenant_id,
+        agent_name="rca-agent",
+    )
+    return result
 
 
 METRICS_TOOL_DEFINITION = {
     "name": "get_metrics",
-    "description": "Retrieve performance metrics for a service including error rate, latency, CPU and memory usage.",
+    "description": "Retrieve structured operational metrics for a service: error rate %, p95/p50 latency, request count, CPU %, memory %, DB pool utilization, with deltas vs previous window.",
     "input_schema": {
         "type": "object",
         "properties": {
-            "service": {
-                "type": "string",
-                "description": "The name of the service to retrieve metrics for",
-            }
+            "service": {"type": "string", "description": "Service name, e.g. payment-service"},
+            "window_minutes": {"type": "integer", "description": "Aggregation window (1-360 minutes, default 30)"},
         },
         "required": ["service"],
     },

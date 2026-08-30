@@ -17,12 +17,23 @@ DATABASE_URL = os.environ.get(
 )
 
 _service_to_incident_ids: Dict[str, List[str]] = {
-    "payment-service": ["INC-0912", "INC-0847", "INC-0799"],
+    "payment-service": ["INC-1001", "INC-0912", "INC-0847", "INC-0799"],
     "auth-service": ["INC-0888", "INC-0820"],
     "order-service": ["INC-0901", "INC-0855"],
 }
 
 _mock_incidents: Dict[str, Dict[str, Any]] = {
+    "INC-1001": {
+        "incident_id": "INC-1001",
+        "tenant_id": "demo",
+        "title": "5xx error rate increase from 1% to 18% on payment-service",
+        "description": "HTTP 500 errors on checkout flows spiked from baseline ~1% to ~18% starting around 2026-08-30T14:32:00. Multiple PaymentTimeoutException occurrences observed in logs. Deploy v2.4.1 released at 14:28 may be related.",
+        "service": "payment-service",
+        "severity": "HIGH",
+        "status": "ACTIVE",
+        "error_rate": "18%",
+        "started_at": "2026-08-30T14:32:00",
+    },
     "INC-0912": {
         "incident_id": "INC-0912",
         "tenant_id": "demo",

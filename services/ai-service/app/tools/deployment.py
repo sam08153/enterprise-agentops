@@ -1,25 +1,25 @@
-def get_recent_deployment(service: str) -> dict:
-    """Retrieve the most recent deployment for a service."""
-    return {
-        "service": service,
-        "version": "v2.4.1",
-        "deployed_at": "2026-08-30T14:28:00",
-        "deployed_by": "ci-pipeline",
-        "previous_version": "v2.4.0",
-        "changelog_url": "https://github.com/org/payment-service/compare/v2.4.0...v2.4.1",
-    }
+from __future__ import annotations
+
+from app.aws_mcp_client import aws_mcp_client
+
+
+def get_recent_deployment(service: str, tenant_id: str = "demo") -> dict:
+    result = aws_mcp_client().call_tool(
+        "get_recent_deployment",
+        {"service": service},
+        tenant_id=tenant_id,
+        agent_name="rca-agent",
+    )
+    return result
 
 
 DEPLOYMENT_TOOL_DEFINITION = {
     "name": "get_recent_deployment",
-    "description": "Get information about the most recent deployment for a service, including version and timing.",
+    "description": "Retrieve metadata about the most recent production deployment for a service: version, deployed_at timestamp, previous version, commit SHA, deploying actor, and status.",
     "input_schema": {
         "type": "object",
         "properties": {
-            "service": {
-                "type": "string",
-                "description": "The name of the service to retrieve deployment info for",
-            }
+            "service": {"type": "string", "description": "Service name, e.g. payment-service"},
         },
         "required": ["service"],
     },
