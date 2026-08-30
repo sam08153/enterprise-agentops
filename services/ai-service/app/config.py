@@ -3,9 +3,10 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_prefix="AI_SERVICE_",
-        env_file=".env",
+        env_prefix="",
+        env_file=(".env", "../../.env"),
         env_file_encoding="utf-8",
+        extra="ignore",
     )
 
     app_name: str = "ai-service"
@@ -14,5 +15,11 @@ class Settings(BaseSettings):
     port: int = 8081
     debug: bool = False
 
+    # LLM
+    groq_api_key: str = ""
+    mock_mode: bool = False
+
+
 
 settings = Settings()
+

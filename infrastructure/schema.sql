@@ -49,3 +49,32 @@ CREATE INDEX IF NOT EXISTS idx_document_chunks_document_id ON document_chunks(do
 CREATE INDEX IF NOT EXISTS idx_document_chunks_embedding
     ON document_chunks USING ivfflat (embedding vector_cosine_ops)
     WITH (lists = 100);
+
+-- Agent Observability Tables
+CREATE TABLE IF NOT EXISTS agent_executions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    incident_id UUID,
+    agent_name VARCHAR(100),
+    status VARCHAR(50),
+    started_at TIMESTAMP,
+    completed_at TIMESTAMP,
+    input_tokens INTEGER,
+    output_tokens INTEGER,
+    tool_calls INTEGER,
+    error_message TEXT
+);
+
+CREATE TABLE IF NOT EXISTS tool_executions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    agent_execution_id UUID REFERENCES agent_executions(id),
+    tool_name VARCHAR(200),
+    input JSONB,
+    output JSONB,
+    status VARCHAR(50),
+    started_at TIMESTAMP,
+    completed_at TIMESTAMP,
+    duration_ms INTEGER
+);
+
+CREATE INDEX IF NOT EXISTS idx_agent_executions_incident_id ON agent_executions(incident_id);
+CREATE INDEX IF NOT EXISTS idx_tool_executions_agent_execution_id ON tool_executions(agent_execution_id);
